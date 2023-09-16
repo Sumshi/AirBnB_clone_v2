@@ -11,6 +11,8 @@ from models.city import City
 from models.amenity import Amenity
 from models.review import Review
 
+from datetime import datetime
+
 
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
@@ -131,7 +133,7 @@ class HBNBCommand(cmd.Cmd):
             return
         # parameters: <Class name> <param 1> <param 2> ...
         param = {}
-        for arg in args_elements[1:]:
+        for arg in args_elements[1:]:  # exclues class name
             key_and_value = arg.split('=')
             if len(key_and_value) != 2:
                 continue
@@ -141,11 +143,15 @@ class HBNBCommand(cmd.Cmd):
 
             # strings with quotes
             if value.startswith('"') and value.endswith('"'):
-                value = value[1:-1]
+                value = value[1:-1]  # removes the quotes start and end
 
             # underscores must be replaced with space in keys
             key = key.replace('-', ' ')
             param[key] = value
+
+            # solving the error from updated at which was missing
+            param['updated_at'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
+            param['created_at'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
         # instance with specified parameter
         new_instance = HBNBCommand.classes[class_name](**param)
         storage.save()
