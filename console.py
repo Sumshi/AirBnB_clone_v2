@@ -146,7 +146,7 @@ class HBNBCommand(cmd.Cmd):
                 value = value[1:-1]  # removes the quotes start and end
 
             # underscores must be replaced with space in keys
-            key = key.replace('-', ' ')
+            value = key.replace('-', ' ')
             param[key] = value
             param['updated_at'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
             param['created_at'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
