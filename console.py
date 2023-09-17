@@ -148,10 +148,6 @@ class HBNBCommand(cmd.Cmd):
             # underscores must be replaced with space in keys
             key = key.replace('-', ' ')
             param[key] = value
-
-            # solving the error from updated at which was missing
-            param['updated_at'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
-            param['created_at'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
         # instance with specified parameter
         new_instance = HBNBCommand.classes[class_name](**param)
         storage.save()
