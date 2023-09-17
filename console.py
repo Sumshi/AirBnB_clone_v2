@@ -146,15 +146,18 @@ class HBNBCommand(cmd.Cmd):
                 value = value[1:-1]  # removes the quotes start and end
 
             # underscores must be replaced with space in keys
-            value = key.replace('-', ' ')
+            value = value.replace('_', ' ')
             param[key] = value
-            param['updated_at'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
-            param['created_at'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
+
         # instance with specified parameter
-        new_instance = HBNBCommand.classes[class_name](**param)
+        new_instance = HBNBCommand.classes[class_name]()
+
+        # update the attibutes of thenew instance with passed parameters
+        for key, val in param.items():
+            setattr(new_instance, key, val)
+
         storage.save()
         print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """

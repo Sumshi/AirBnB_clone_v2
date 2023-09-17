@@ -15,14 +15,12 @@ class BaseModel:
             self.updated_at = datetime.now()
             storage.new(self)
         else:
-            kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
+            for key, val in kwargs.items():
+                if key == 'updated_at' or key == 'created_at':
+                    val = datetime.strptime(kwargs['updated_at'],
                                                      '%Y-%m-%dT%H:%M:%S.%f')
-            kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-        # removing keyword error
-        if '__class__' in kwargs:
-            del kwargs['__class__']
-            self.__dict__.update(kwargs)
+                if key != '__class__':
+                    setattr(self, key, val)
 
     def __str__(self):
         """Returns a string representation of the instance"""
