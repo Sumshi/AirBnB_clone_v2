@@ -49,7 +49,10 @@ class DBStorage:
 
     def all(self, cls=None):
         """query on the current database session"""
-        classes = {'State': State, 'City': City}
+        classes = {
+            'State': State, 'City': City, 'User': User,
+            'Place': Place, 'Review': Review
+        }
         objects = {}
         # # create session maker object that binds to the previous db
         # my_session = sessionmaker(bind=self.__engine)
