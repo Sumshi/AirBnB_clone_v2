@@ -156,8 +156,7 @@ class HBNBCommand(cmd.Cmd):
         # update the attibutes of thenew instance with passed parameters
         for key, val in param.items():
             setattr(new_instance, key, val)
-        storage.new(new_instance)
-        storage.save()
+        new_instance.save()
         print(new_instance.id)
 
     def help_create(self):
@@ -189,7 +188,7 @@ class HBNBCommand(cmd.Cmd):
 
         key = c_name + "." + c_id
         try:
-            print(storage._FileStorage__objects[key])
+            print(storage.all()[key])
         except KeyError:
             print("** no instance found **")
 
@@ -234,17 +233,18 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
         print_list = []
-        stored_objects = storage.all()
 
         if args:
             args = args.split(' ')[0]  # remove possible trailing args
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
+            stored_objects = storage.all(args)
             for k, v in stored_objects.items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
+            stored_objects = storage.all()
             for k, v in stored_objects.items():
                 print_list.append(str(v))
 
@@ -257,10 +257,15 @@ class HBNBCommand(cmd.Cmd):
 
     def do_count(self, args):
         """Count current number of class instances"""
-        count = 0
-        for k, v in storage._FileStorage__objects.items():
-            if args == k.split('.')[0]:
-                count += 1
+        if args:
+            count = 0
+            args = args.split(' ')[0]
+            for k in storage.all(args).keys():
+                if args == k.split('.')[0]:
+                    count += 1
+        # for k, v in storage._FileStorage__objects.items():
+        #     if args == k.split('.')[0]:
+        #         count += 1
         print(count)
 
     def help_count(self):

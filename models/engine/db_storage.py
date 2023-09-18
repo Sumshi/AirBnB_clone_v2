@@ -68,6 +68,7 @@ class DBStorage:
                 for obj in query.all():
                     obj_key = '{}.{}'.format(obj.__class__.__name__, obj.id)
                     objects[obj_key] = obj
+
         return objects
 
     def new(self, obj):

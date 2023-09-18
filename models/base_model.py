@@ -47,12 +47,20 @@ class BaseModel:
     def __str__(self):
         """Returns a string representation of the instance"""
         cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+        clas_dict = self.to_dict()
+        for key, val in clas_dict.items():
+            if key == 'updated_at' or key == 'created_at':
+                val = datetime.strptime(val,
+                                        '%Y-%m-%dT%H:%M:%S')
+            clas_dict[key] = val
+        return '[{}] ({}) {}'.format(cls, self.id, clas_dict)
+        # cls = (str(type(self)).split('.')[-1]).split('\'')[0]
+        # return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
         from models import storage
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.utcnow()
         storage.new(self)
         storage.save()
 
@@ -64,10 +72,10 @@ class BaseModel:
                           (str(type(self)).split('.')[-1]).split('\'')[0]})
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
+
         # remove _sa_instance_state
-        if "_sa_instance_state" in dictionary.key():
-            print("delete sa_instance")
-            dictionary.pop("_sa_instance_state")
+        if "_sa_instance_state" in dictionary.keys():
+            dictionary.pop("_sa_instance_state", None)
 
         return dictionary
 
