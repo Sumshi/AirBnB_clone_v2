@@ -1,18 +1,27 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
 from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
 
 
-class State(BaseModel):
+class State(BaseModel, Base):
     """ State class """
-    name = ""
+    __tablename = "states"
+    name = Column(String(128), nullable=False)
+    cities = relationship("City", backref="state")
 
-    def __init__(self, *args, **kwargs):
+    @property
+    def cities(self):
+        """getter attribute that returns a list of city
+        instances with state_id equals to the current state.id
         """
-        Method to initialize the State class instance
-
-        Args:
-            args - variable arguments
-            kwargs - key word arguments
-        """
-        super().__init__(*args, **kwargs)
+        from models import storage
+        related_cities = []
+        my_cities = storage.all(City)
+        for city in my_cities:
+            if self.id == city.state_id:
+                related_cities.append(city)
+        return related_cities
+        # return self.cities
