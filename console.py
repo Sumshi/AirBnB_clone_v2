@@ -241,7 +241,7 @@ class HBNBCommand(cmd.Cmd):
                 return
             print(args)
             stored_objects = storage.all(args)
-            print(stored_objects)
+            # print(stored_objects)
             for k, v in stored_objects.items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
