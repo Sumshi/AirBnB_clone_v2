@@ -46,16 +46,16 @@ class BaseModel:
 
     def __str__(self):
         """Returns a string representation of the instance"""
-        cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        clas_dict = self.to_dict()
-        for key, val in clas_dict.items():
-            if key == 'updated_at' or key == 'created_at':
-                val = datetime.strptime(val,
-                                        '%Y-%m-%dT%H:%M:%S')
-            clas_dict[key] = val
-        return '[{}] ({}) {}'.format(cls, self.id, clas_dict)
         # cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        # return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+        # clas_dict = self.to_dict()
+        # for key, val in clas_dict.items():
+        #     if key == 'updated_at' or key == 'created_at':
+        #         val = datetime.strptime(val,
+        #                                 '%Y-%m-%dT%H:%M:%S')
+        #     clas_dict[key] = val
+        # return '[{}] ({}) {}'.format(cls, self.id, clas_dict)
+        cls = (str(type(self)).split('.')[-1]).split('\'')[0]
+        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
