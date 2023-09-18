@@ -46,16 +46,16 @@ class BaseModel:
 
     def __str__(self):
         """Returns a string representation of the instance"""
-        # cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        # clas_dict = self.to_dict()
-        # for key, val in clas_dict.items():
-        #     if key == 'updated_at' or key == 'created_at':
-        #         val = datetime.strptime(val,
-        #                                 '%Y-%m-%dT%H:%M:%S')
-        #     clas_dict[key] = val
-        # return '[{}] ({}) {}'.format(cls, self.id, clas_dict)
         cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+        clas_dict = self.to_dict()
+        for key, val in clas_dict.items():
+            if key == 'updated_at' or key == 'created_at':
+                val = datetime.strptime(val,
+                                        '%Y-%m-%dT%H:%M:%S.%f')
+            clas_dict[key] = val
+        return '[{}] ({}) {}'.format(cls, self.id, clas_dict)
+        # cls = (str(type(self)).split('.')[-1]).split('\'')[0]
+        # return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
@@ -70,8 +70,12 @@ class BaseModel:
         dictionary.update(self.__dict__)
         dictionary.update({'__class__':
                           (str(type(self)).split('.')[-1]).split('\'')[0]})
-        dictionary['created_at'] = self.created_at.isoformat()
-        dictionary['updated_at'] = self.updated_at.isoformat()
+        dictionary['created_at'] = self.created_at.strftime(
+            '%Y-%m-%dT%H:%M:%S.%f')
+        dictionary['updated_at'] = self.updated_at.strftime(
+            '%Y-%m-%dT%H:%M:%S.%f')
+        # dictionary['created_at'] = self.created_at.isoformat()
+        # dictionary['updated_at'] = self.updated_at.isoformat()
 
         # remove _sa_instance_state
         if "_sa_instance_state" in dictionary.keys():
