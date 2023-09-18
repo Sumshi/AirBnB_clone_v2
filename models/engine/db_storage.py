@@ -3,9 +3,10 @@
 """database storage class"""
 
 from sqlalchemy.orm import sessionmaker, scoped_session
-from sqlalchemy import (create_engine), MetaData
+from sqlalchemy import create_engine
+from sqlalchemy.exc import OperationalError, IntegrityError
 import MySQLdb
-from models.base_model import Base
+from models.base_model import Base, BaseModel
 from os import getenv
 from models.amenity import Amenity
 from models.user import User
@@ -41,22 +42,23 @@ class DBStorage:
         if env == 'test':
             Base.metadata.drop_all(self.__engine)
 
-    def all(self, cls=None):
-        """query on the current database session"""
-        classes = {
-               'BaseModel': BaseModel, 'User': User, 'Place': Place,
-               'State': State, 'City': City, 'Amenity': Amenity,
-               'Review': Review
-              }
-        objects = {}
-        # create session maker object that binds to the previous db
-        Session = sessionmaker(bind=self.__engine)
+        my_session = sessionmaker(bind=self.__engine)
 
         # creates a new session
-        self.__session = Session()
+        self.__session = my_session()
+
+    def all(self, cls=None):
+        """query on the current database session"""
+        classes = {'State': State, 'City': City}
+        objects = {}
+        # # create session maker object that binds to the previous db
+        # my_session = sessionmaker(bind=self.__engine)
+
+        # # creates a new session
+        # self.__session = my_session()
         if (cls is None):
             for items in classes:
-                query = self.__session.query(items)
+                query = self.__session.query(classes[items])
                 for obj in query.all():
                     obj_key = '{}.{}'.format(obj.__class__.__name__, obj.id)
                     objects[obj_key] = obj
@@ -74,7 +76,8 @@ class DBStorage:
 
     def save(self):
         """commit all changes of the current database session"""
-        self.__session.commit(obj)
+        print("self.__session.commit() called")
+        self.__session.commit()
 
     def delete(self, obj=None):
         """delete from the current database session obj if not None"""
@@ -84,7 +87,7 @@ class DBStorage:
     def reload(self):
         """creates all tables in the database"""
         from models.base_model import Base
-        from sqlalchemy import (create_engine), MetaData
+        from sqlalchemy import create_engine, MetaData
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(
             bind=self.__engine, expire_on_commit=False
