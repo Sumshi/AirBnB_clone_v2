@@ -38,14 +38,15 @@ class DBStorage:
             pool_pre_ping=True
         )
 
-        Base.metadata.create_all(self.__engine)
         if env == 'test':
             Base.metadata.drop_all(self.__engine)
+        else:
+            Base.metadata.create_all(self.__engine)
 
-        my_session = sessionmaker(bind=self.__engine)
+        # my_session = sessionmaker(bind=self.__engine)
 
-        # creates a new session
-        self.__session = my_session()
+        # # creates a new session
+        # self.__session = my_session()
 
     def all(self, cls=None):
         """query on the current database session"""
@@ -80,7 +81,6 @@ class DBStorage:
 
     def save(self):
         """commit all changes of the current database session"""
-        print("self.__session.commit() called")
         self.__session.commit()
 
     def delete(self, obj=None):
@@ -92,6 +92,7 @@ class DBStorage:
         """creates all tables in the database"""
         from models.base_model import Base
         from sqlalchemy import create_engine, MetaData
+        # self.__session.close()
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(
             bind=self.__engine, expire_on_commit=False
