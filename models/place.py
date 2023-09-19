@@ -28,7 +28,6 @@ class Place(BaseModel, Base):
         price_by_night = Column(Integer, nullable=False, default=0)
         latitude = Column(Float, nullable=True)
         longitude = Column(Float, nullable=True)
-        # amenity_ids = []
         reviews = relationship("Review", backref=backref(
             "place", cascade="all, delete"))
         amenities = relationship(
@@ -71,14 +70,7 @@ class Place(BaseModel, Base):
             """
             from models import storage, Amenity
 
-            # avail_amenities = storage.all(Amenity)
-            # print("getter method called")
-            # print("first print : {}".format(avail_amenities))
             result = []
-            # for amenity in avail_amenities.values():
-            #     if amenity.id in self.amenity_ids:
-            #         result.append(amenity)
-            # return result
             for amenity_id in self.amenity_ids:
                 key = "Amenity." + amenity_id
                 if key in storage.all(Amenity):
@@ -91,7 +83,7 @@ class Place(BaseModel, Base):
             Setter attribute amenities that handles append method
             for adding an Amenity.id to the attribute amenity_ids
             """
-            # from models.__init__ import storage
+
             from models.amenity import Amenity
             print("amenity setter method called")
             if obj and isinstance(Amenity):

@@ -43,11 +43,6 @@ class DBStorage:
         else:
             Base.metadata.create_all(self.__engine)
 
-        # my_session = sessionmaker(bind=self.__engine)
-
-        # # creates a new session
-        # self.__session = my_session()
-
     def all(self, cls=None):
         """query on the current database session"""
         classes = {
@@ -55,11 +50,6 @@ class DBStorage:
             'Place': Place, 'Review': Review, 'Amenity': Amenity,
         }
         objects = {}
-        # # create session maker object that binds to the previous db
-        # my_session = sessionmaker(bind=self.__engine)
-
-        # # creates a new session
-        # self.__session = my_session()
         if (cls is None):
             for items in classes:
                 query = self.__session.query(classes[items])
@@ -90,12 +80,14 @@ class DBStorage:
 
     def reload(self):
         """creates all tables in the database"""
-        from models.base_model import Base
-        from sqlalchemy import create_engine, MetaData
-        # self.__session.close()
+        # self.close()
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(
             bind=self.__engine, expire_on_commit=False
         )
         Session = scoped_session(session_factory)
         self.__session = Session()
+
+    def close(self):
+        """ close session """
+        self.__session.close()
