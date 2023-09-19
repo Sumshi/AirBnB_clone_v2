@@ -1,8 +1,16 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project """
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Float, Integer, ForeignKey
+from sqlalchemy import Column, String, Float, Integer, Table, ForeignKey
 from sqlalchemy.orm import relationship
+
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column('place_id', String(60),
+                             ForeignKey('places.id'),
+                             primary_key=True, nullable=False),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'),
+                             primary_key=True, nullable=False))
 
 
 class Place(BaseModel, Base):
@@ -20,6 +28,9 @@ class Place(BaseModel, Base):
     longitude = Column(Float, nullable=True)
     amenity_ids = []
     reviews = relationship("Review", backref="place")
+    amenities = relationship('Amenity', secondary=place_amenity,
+                             viewonly=False,
+                             back_populates='place_amenities')
 
     @property
     def reviews(self):
@@ -28,3 +39,22 @@ class Place(BaseModel, Base):
         returns the list of Review instances
         """
         return self.reviews
+
+    @property
+    def amenities(self):
+        """
+        getter attribute that returns the list of Amenity instances
+        based on the attribute amenity_ids
+        """
+        return self.amenities
+
+    @amenities.setter
+    def amenities(self, obj):
+        """
+        Setter attribute amenities that handles append method
+        for adding an Amenity.id to the attribute amenity_ids
+        """
+        from models.__init__ import storage
+        from models.amenity import Amenity
+        if (instances(obj, storage.all(Amenity))):
+            self.amenity_ids.append(obj.id)
