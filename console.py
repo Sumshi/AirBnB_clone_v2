@@ -240,6 +240,7 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
                 return
             stored_objects = storage.all(args)
+            # print(stored_objects)
             for k, v in stored_objects.items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
