@@ -15,7 +15,7 @@ class FileStorage:
         else:  # cls argument is provided
             dict_objects = {}  # iterate through items key-value
             for key, obj in FileStorage.__objects.items():
-                if obj.__class__.__name__ == cls:
+                if obj.__class__ == cls:
                     dict_objects[key] = obj
             return dict_objects
 
