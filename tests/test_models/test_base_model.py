@@ -1,11 +1,13 @@
 #!/usr/bin/python3
 """ Module test_base_model """
 from models.base_model import BaseModel
+from models import base_model
 import unittest
 import datetime
 from uuid import UUID
 import json
 import os
+import pep8
 
 
 @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
@@ -99,5 +101,33 @@ class test_basemodel(unittest.TestCase):
         self.assertEqual(type(new.updated_at), datetime.datetime)
         n = new.to_dict()
         new = BaseModel(**n)
-        # print(new.to_dict())
         self.assertFalse(new.created_at == new.updated_at)
+
+    def test_documentation(self):
+        """
+        Test module documentation
+        """
+        self.assertGreater(len(base_model.__doc__), 3)
+        self.assertGreater(len(BaseModel.__doc__), 3)
+        self.assertGreater(len(BaseModel.__init__.__doc__), 3)
+        self.assertGreater(len(self.__doc__), 3)
+
+    def test_pep8_base_model(self):
+        """
+        Pep8 compliance in base_model.py
+        """
+        style = pep8.StyleGuide(quiet=False)
+        errors = 0
+        file = (["models/base_model.py"])
+        errors += style.check_files(file).total_errors
+        self.assertEqual(errors, 0, 'Need to fix Pep8')
+
+    def test_pep8_tets_base_model(self):
+        """
+        Pep8 compliance in test_console.py
+        """
+        style = pep8.StyleGuide(quiet=False)
+        errors = 0
+        file = (["tests/test_models/test_base_model.py"])
+        errors += style.check_files(file).total_errors
+        self.assertEqual(errors, 0, 'Need to fix Pep8')

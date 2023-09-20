@@ -2,10 +2,15 @@
 """ Module for testing file storage"""
 import unittest
 from models.base_model import BaseModel
+from models.engine import file_storage
+from models.engine.file_storage import FileStorage
 from models import storage
 import os
+import pep8
 
 
+@unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                 'database storage not supported')
 class test_fileStorage(unittest.TestCase):
     """ Class to test the file storage method """
 
@@ -33,7 +38,7 @@ class test_fileStorage(unittest.TestCase):
         new = BaseModel()
         for obj in storage.all().values():
             temp = obj
-        self.assertTrue(temp is obj)
+            self.assertTrue(temp is obj)
 
     def test_all(self):
         """ __objects is properly returned """
@@ -67,7 +72,7 @@ class test_fileStorage(unittest.TestCase):
         storage.reload()
         for obj in storage.all().values():
             loaded = obj
-        self.assertEqual(new.to_dict()['id'], loaded.to_dict()['id'])
+            self.assertEqual(new.to_dict()['id'], loaded.to_dict()['id'])
 
     def test_reload_empty(self):
         """ Load from an empty file """
@@ -100,10 +105,44 @@ class test_fileStorage(unittest.TestCase):
         _id = new.to_dict()['id']
         for key in storage.all().keys():
             temp = key
-        self.assertEqual(temp, 'BaseModel' + '.' + _id)
+            self.assertEqual(temp, 'BaseModel' + '.' + _id)
 
     def test_storage_var_created(self):
         """ FileStorage object storage created """
         from models.engine.file_storage import FileStorage
         print(type(storage))
         self.assertEqual(type(storage), FileStorage)
+
+    def test_documentation(self):
+        """
+        Test module documentation
+        """
+        self.assertGreater(len(file_storage.__doc__), 3)
+        self.assertGreater(len(FileStorage.__doc__), 3)
+        self.assertGreater(len(FileStorage.all.__doc__), 3)
+        self.assertGreater(len(FileStorage.delete.__doc__), 3)
+        self.assertGreater(len(FileStorage.new.__doc__), 3)
+        self.assertGreater(len(FileStorage.reload.__doc__), 3)
+        self.assertGreater(len(FileStorage.save.__doc__), 3)
+        self.assertGreater(len(FileStorage.__init__.__doc__), 3)
+        self.assertGreater(len(self.__doc__), 3)
+
+    def test_pep8_file_storage(self):
+        """
+        Pep8 compliance in file_storage.py
+        """
+        style = pep8.StyleGuide(quiet=False)
+        errors = 0
+        file = (["models/engine/file_storage.py"])
+        errors += style.check_files(file).total_errors
+        self.assertEqual(errors, 0, 'Need to fix Pep8')
+
+    def test_pep8_test_file_storage(self):
+        """
+        Pep8 compliance in test_file_storage.py
+        """
+        style = pep8.StyleGuide(quiet=False)
+        errors = 0
+        file = (["tests/test_models/test_engine/test_file_storage.py"])
+        errors += style.check_files(file).total_errors
+        self.assertEqual(errors, 0, 'Need to fix Pep8')

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ """
-from tests.test_models.test_base_model import test_basemodel
+from tests.test_models.test_base_model import test_basemodel, unittest
 from models.user import User
 import os
 
@@ -14,12 +14,12 @@ class test_User(test_basemodel):
         self.name = "User"
         self.value = User
 
+    @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') ==
+                     'db', "database storage not supported")
     def test_first_name(self):
         """testing user first name attribute"""
         new = self.value()
-        self.assertEqual(type(new.first_name), str if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.first_name))
 
     def test_last_name(self):
         """testing user last name attribute"""

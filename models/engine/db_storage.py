@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import create_engine
 from sqlalchemy.exc import OperationalError, IntegrityError
 import MySQLdb
-from models.base_model import Base, BaseModel
+from models.base_model import Base
 from os import getenv
 from models.amenity import Amenity
 from models.user import User
@@ -38,10 +38,10 @@ class DBStorage:
             pool_pre_ping=True
         )
 
+        # Base.metadata.create_all(self.__engine)
+
         if env == 'test':
             Base.metadata.drop_all(self.__engine)
-        else:
-            Base.metadata.create_all(self.__engine)
 
     def all(self, cls=None):
         """query on the current database session"""
