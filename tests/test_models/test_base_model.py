@@ -8,6 +8,8 @@ import json
 import os
 
 
+@unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                 'basemodel test not supported')
 class test_basemodel(unittest.TestCase):
     """ Defines test cases for the BaseModel class """
 
@@ -29,7 +31,7 @@ class test_basemodel(unittest.TestCase):
             pass
 
     def test_default(self):
-        """ test class type """
+        """default testing of base class """
         i = self.value()
         self.assertEqual(type(i), self.value)
 
