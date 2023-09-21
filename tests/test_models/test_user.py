@@ -19,7 +19,7 @@ class test_User(test_basemodel):
     def test_first_name(self):
         """testing user first name attribute"""
         new = self.value()
-        self.assertEqual(type(new.first_name))
+        self.assertEqual(type(new.first_name), str)
 
     def test_last_name(self):
         """testing user last name attribute"""
