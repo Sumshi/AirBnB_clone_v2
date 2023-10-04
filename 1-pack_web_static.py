@@ -7,7 +7,6 @@ from fabric.api import local
 from datetime import datetime
 
 
-
 def do_pack():
     """Create a tar gzipped archive of the directory web_static."""
     # obtain the current date and time
