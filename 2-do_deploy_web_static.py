@@ -3,14 +3,18 @@
 This module provides a function to create a .tgz archive from web_static folder
 """
 
+
 from fabric.api import *
 from datetime import datetime
 import os
+import pep8
 
 
 # setting the web-01 and web-02 ip addresses
 env.hosts = ['54.90.12.230', '52.86.29.154']
 env.user = "ubuntu"
+
+
 def do_pack():
     """Create a tar gzipped archive of the directory web_static."""
     try:
@@ -52,12 +56,19 @@ def do_deploy(archive_path):
         run('rm /tmp/{}'.format(archive_name))
 
         # Delete symbolic link /data/web_static/current
-        run('rm -rf /data/web_static/current')
+        # run('rm -rf /data/web_static/current')
 
         # Create a new symbolic link
-        run('mv /data/web_static/releases/{}/web_static/* /data/web_static/releases/{}/'
-            .format(archive_folder, archive_folder))
-        run('rm -rf /data/web_static/releases/{}/web_static'.format(archive_folder))
+        run(
+            'mv /data/web_static/releases/{}/web_static/* \
+            /data/web_static/releases/{}/'
+            .format(archive_folder, archive_folder)
+        )
+        run(
+            'rm -rf /data/web_static/releases/{}/web_static'
+            .format(archive_folder)
+        )
+        run('rm -rf /data/web_static/current')
         run('ln -s /data/web_static/releases/{}/ /data/web_static/current'
             .format(archive_folder))
         return True
