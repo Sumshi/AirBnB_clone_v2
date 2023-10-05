@@ -9,8 +9,8 @@ import os
 
 
 # setting the web-01 and web-02 ip addresses
-# env.hosts = ['54.90.12.230', '52.86.29.154']
-# env.user = "ubuntu"
+env.hosts = ['54.90.12.230', '52.86.29.154']
+env.user = "ubuntu"
 def do_pack():
     """Create a tar gzipped archive of the directory web_static."""
     try:
