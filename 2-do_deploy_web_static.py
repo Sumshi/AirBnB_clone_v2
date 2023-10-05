@@ -30,7 +30,6 @@ def do_pack():
 
 
 def do_deploy(archive_path):
-
     """
     distributes an archive to your web servers, using the function do_deploy
     """
@@ -64,3 +63,4 @@ def do_deploy(archive_path):
         return True
     else:
         return False
+
