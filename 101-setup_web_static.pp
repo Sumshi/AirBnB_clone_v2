@@ -4,10 +4,6 @@ exec { 'apt-update':
   refreshonly => true,
 }
 
-exec { 'hbnb':
-    command     => sed -i '61i\\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n' /etc/nginx/sites-available/default,
-}
-
 package { 'nginx':
   ensure   => 'present',
 }
