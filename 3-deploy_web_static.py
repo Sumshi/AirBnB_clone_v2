@@ -3,6 +3,7 @@
 This module provides a function to create a .tgz archive from web_static folder
 """
 
+
 from fabric.api import *
 from datetime import datetime
 import os
@@ -27,6 +28,7 @@ def do_pack():
 
         # Use tar command to create a compresses archive
         archived = local("tar -cvzf {} web_static".format(archive_path))
+        return archive_path
     except Exception as e:
         return None
 
@@ -54,12 +56,19 @@ def do_deploy(archive_path):
         run('rm /tmp/{}'.format(archive_name))
 
         # Delete symbolic link /data/web_static/current
-        run('rm -rf /data/web_static/current')
+        # run('rm -rf /data/web_static/current')
 
         # Create a new symbolic link
-        run('mv /data/web_static/releases/{}/web_static/* /data/web_static/releases/{}/'
-            .format(archive_folder, archive_folder))
-        run('rm -rf /data/web_static/releases/{}/web_static'.format(archive_folder))
+        run(
+            'mv /data/web_static/releases/{}/web_static/* \
+            /data/web_static/releases/{}/'
+            .format(archive_folder, archive_folder)
+        )
+        run(
+            'rm -rf /data/web_static/releases/{}/web_static'
+            .format(archive_folder)
+        )
+        run('rm -rf /data/web_static/current')
         run('ln -s /data/web_static/releases/{}/ /data/web_static/current'
             .format(archive_folder))
         return True
@@ -68,11 +77,8 @@ def do_deploy(archive_path):
 
 
 def deploy():
-    """
-    Deploy the web_static content to the web servers.
-    """
+    """creates path of an archive"""
     archive_path = do_pack()
-    if not archive_path:
+    if archive_path is None:
         return False
     return do_deploy(archive_path)
-
