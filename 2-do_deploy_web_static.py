@@ -44,7 +44,7 @@ def do_deploy(archive_path):
         # extract filename from a full path, web_static_20231004163451.tgz
         archive_name = archive_path.split('/')[-1]
         # extract only the folder name, web_static_20231004163451
-        archive_folder = archive_path.split('.')[0]  # gets filename
+        archive_folder = archive_name.split('.')[0]  # gets filename
         # place the extracted content in desired folder
         run('mkdir -p /data/web_static/releases/{}'.format(archive_folder))
 
