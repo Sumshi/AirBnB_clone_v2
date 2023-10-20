@@ -5,7 +5,7 @@ from flask import Flask
 from flask import render_template
 from models import storage, State
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 
 @app.route('/cities_by_states', strict_slashes=False)
@@ -15,7 +15,8 @@ def cities_by_states():
     Returns:
         [str]: HTML page
     """
-    states = storage.all(State).values()
+    states = list(storage.all("State").values())
+    states = sorted(states, key=lambda state: state.name)
     return render_template('8-cities_by_states.html', states=states)
 
 
