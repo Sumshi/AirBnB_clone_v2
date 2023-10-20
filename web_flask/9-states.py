@@ -17,8 +17,7 @@ def states():
     Returns:
         [str]: HTML page
     """
-    states = list(storage.all("State").values())
-    states = sorted(states, key=lambda state: state.name)
+    states = storage.all("State").values()
     return render_template('9-states.html', states=states)
 
 
@@ -26,7 +25,6 @@ def states():
 def states_id(id):
     """Display HTML page with the list of cities of a state"""
     states = storage.all("State").values()
-    states = sorted(states, key=lambda state: state.name)
     for state in states:
         if state.id == id:
             return render_template('9-states.html', state=state)
