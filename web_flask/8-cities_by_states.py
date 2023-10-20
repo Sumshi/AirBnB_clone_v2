@@ -14,6 +14,7 @@ app = Flask(__name__, template_folder='templates')
 def cities_by_states():
     """
     display a HTML page: (inside the tag BODY)
+    funtcion is executed url:port/cities_by_states is requested
     Returns:
         [str]: HTML page
     """
